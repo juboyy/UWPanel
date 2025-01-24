@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import logouw from './logos/logouw.png';
 import './logoUW.css';
 import './statusColors.css';
 
 const FlightListPage = ({ flights, getStatusColor, onAddClick, onEditFlight, onDeleteFlight }) => {
-    const navigate = useNavigate();
     const [currentTime, setCurrentTime] = useState('');
 
     // Função para obter o horário no fuso horário do Panamá
@@ -29,15 +27,7 @@ const FlightListPage = ({ flights, getStatusColor, onAddClick, onEditFlight, onD
         return () => clearInterval(timer);
     }, []);
 
-    const handleEdit = (flight) => {
-        navigate(`/edit/${flight.id}`);
-    };
 
-    const handleDelete = (flightId) => {
-        if (window.confirm('Are you sure you want to delete this flight?')) {
-            onDeleteFlight(flightId);
-        }
-    };
 
     return (
         <div className="container py-4">

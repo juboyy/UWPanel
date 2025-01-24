@@ -1,0 +1,52 @@
+/* FlightBoard.css */
+body {
+    background-color: #0d1b2a !important;
+    color: white !important;
+  }
+  
+  .bg-dark-custom {
+    background-color: #0d1b2a !important;
+    color: white !important;
+  }
+  
+  .flight-table {
+    background-color: #0d1b2a !important;
+  }
+  
+  .flight-table thead {
+    background-color: #152230 !important;
+  }
+  
+  .flight-table th {
+    color: white !important;
+    background-color: #152230 !important;
+    border-color: #1e303f !important;
+  }
+  
+  .flight-table tbody tr {
+    color: white !important;
+  }
+  
+  .flight-table tbody tr:nth-child(even) {
+    background-color: #152230 !important;
+  }
+  
+  .flight-table tbody tr:nth-child(odd) {
+    background-color: #0d1b2a !important;
+  }
+  
+  .flight-table td {
+    color: white !important;
+    border-color: #1e303f !important;
+  }
+  
+  /* Button styles */
+  .btn-primary {
+    background-color: #1e303f !important;
+    border-color: #253746 !important;
+    color: white !important;
+  }
+  
+  .btn-primary:hover {
+    background-color: #253746 !important;
+  }

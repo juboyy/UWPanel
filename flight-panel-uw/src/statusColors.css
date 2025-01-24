@@ -1,0 +1,27 @@
+.text-blue {
+    color: #007bff; /* Azul */
+  }
+  
+  .text-yellow {
+    color: #ffc107; /* Amarelo */
+  }
+  
+  .text-red {
+    color: #dc3545; /* Vermelho */
+  }
+  
+  .text-green {
+    color: #28a745; /* Verde */
+  }
+  
+  .text-orange {
+    color: #FFA500; /* Laranja */
+  }
+  
+  .text-gray {
+    color: #6c757d; /* Cinza */
+  }
+  
+  .text-cyanBlue {
+    color: #4accff; /* Ciano */
+  }

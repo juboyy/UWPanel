@@ -3,7 +3,8 @@ import { Flight } from '../types/flightTypes';
 import { DateTime } from 'luxon';
 
 const API_KEY = 's2NNDar9HUSM5MaOqHllc98OxRbK5mx5tRw1H7LD/ws=';
-const API_URL = 'https://flight-panel.onrender.com/api'; // Modificado para usar apenas /api
+// Tentar sem o /api no final
+const API_URL = 'https://flight-panel.onrender.com';
 const DEFAULT_AIRLINE = 'Universal Weather';
 
 interface ApiResponse {
@@ -82,7 +83,8 @@ export class FlightService {
 
   async getAllFlights(): Promise<Flight[]> {
     try {
-      const response = await this.api.get<ApiResponse>('/flights'); // Simplificado para apenas /flights
+      // Tentar com o path completo
+      const response = await this.api.get<ApiResponse>('/flights');
       
       if (!response.data || !response.data.flights) {
         console.warn('No flights data received from API');
@@ -137,7 +139,15 @@ export class FlightService {
           return a.departureTime - b.departureTime;
         });
     } catch (error: any) {
-      console.error('Error fetching flights:', error.response?.status, error.response?.data || error.message);
+      // Melhorar o log de erro para debug
+      if (axios.isAxiosError(error)) {
+        console.error('API Error:', {
+          status: error.response?.status,
+          data: error.response?.data,
+          headers: error.response?.headers,
+          url: error.config?.url
+        });
+      }
       return this.getMockFlights();
     }
   }

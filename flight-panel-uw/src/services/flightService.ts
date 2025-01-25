@@ -3,7 +3,7 @@ import { Flight } from '../types/flightTypes';
 import { DateTime } from 'luxon';
 
 const API_KEY = 's2NNDar9HUSM5MaOqHllc98OxRbK5mx5tRw1H7LD/ws=';
-const API_URL = 'https://flight-panel.onrender.com/public/api/flights';
+const API_URL = 'https://flight-panel.onrender.com';  // Removido o path da URL base
 const DEFAULT_AIRLINE = 'Universal Weather';
 
 interface ApiResponse {
@@ -80,7 +80,7 @@ export class FlightService {
 
   async getAllFlights(): Promise<Flight[]> {
     try {
-      const response = await this.api.get<ApiResponse>('');  // Note que agora usamos string vazia aqui
+      const response = await this.api.get<ApiResponse>('/public/api/flights');  // Adicionado o path completo aqui
 
       if (!response.data || !response.data.flights) {
         return this.getMockFlights();

@@ -3,7 +3,7 @@ import { Flight } from '../types/flightTypes';
 import { DateTime } from 'luxon';
 
 const API_KEY = 's2NNDar9HUSM5MaOqHllc98OxRbK5mx5tRw1H7LD/ws=';
-const API_URL = 'https://flight-panel.onrender.com';  // Removido o path da URL base
+const API_URL = 'https://flight-panel.onrender.com/api'; // Modificado para usar apenas /api
 const DEFAULT_AIRLINE = 'Universal Weather';
 
 interface ApiResponse {
@@ -25,7 +25,9 @@ export class FlightService {
     headers: {
       'x-api-key': API_KEY,
       Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
+    timeout: 10000, // 10 segundos de timeout
   });
 
   private readonly PANAMA_TIMEZONE = 'America/Panama';
@@ -80,9 +82,10 @@ export class FlightService {
 
   async getAllFlights(): Promise<Flight[]> {
     try {
-      const response = await this.api.get<ApiResponse>('/public/api/flights');  // Adicionado o path completo aqui
-
+      const response = await this.api.get<ApiResponse>('/flights'); // Simplificado para apenas /flights
+      
       if (!response.data || !response.data.flights) {
+        console.warn('No flights data received from API');
         return this.getMockFlights();
       }
 
@@ -134,7 +137,7 @@ export class FlightService {
           return a.departureTime - b.departureTime;
         });
     } catch (error: any) {
-      console.error('Error fetching flights:', error);
+      console.error('Error fetching flights:', error.response?.status, error.response?.data || error.message);
       return this.getMockFlights();
     }
   }

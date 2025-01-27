@@ -4,11 +4,13 @@ const axios = require('axios');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000; // Alterado para 3000 para match com Render
 
-// Configurações do CORS e middleware
+// Middleware
 app.use(cors());
 app.use(express.json());
+
+// Servir arquivos estáticos do React
 app.use(express.static(path.join(__dirname, '../build')));
 
 // Rota proxy para a API do ForeFlight
@@ -27,7 +29,7 @@ app.get('/api/flights', async (req, res) => {
   }
 });
 
-// Serve o app React para outras rotas
+// Rota catch-all para o React Router
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });

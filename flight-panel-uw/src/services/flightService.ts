@@ -3,8 +3,9 @@ import { Flight } from '../types/flightTypes';
 import { DateTime } from 'luxon';
 
 const API_KEY = 's2NNDar9HUSM5MaOqHllc98OxRbK5mx5tRw1H7LD/ws=';
-const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
-const API_URL = `${CORS_PROXY}https://public-api.foreflight.com`;
+// Usando o allOrigins como alternativa
+const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+const API_URL = `${CORS_PROXY}${encodeURIComponent('https://public-api.foreflight.com')}`;
 const DEFAULT_AIRLINE = 'Universal Weather';
 
 interface ApiResponse {
@@ -27,7 +28,6 @@ export class FlightService {
       'ff-api-key': API_KEY,
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'X-Requested-With': 'XMLHttpRequest', // Necessário para cors-anywhere
     },
     timeout: 10000, // 10 segundos de timeout
   });
@@ -146,9 +146,10 @@ export class FlightService {
           status: error.response?.status,
           data: error.response?.data,
           headers: error.response?.headers,
-          url: `${API_URL}${error.config?.url}`, // URL completa para debug
+          url: error.config?.url,
           method: error.config?.method,
-          message: error.message
+          message: error.message,
+          fullUrl: `${API_URL}${error.config?.url}` // URL completa para debug
         });
       }
       return this.getMockFlights();

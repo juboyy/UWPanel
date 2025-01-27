@@ -3,9 +3,7 @@ import { Flight } from '../types/flightTypes';
 import { DateTime } from 'luxon';
 
 const API_KEY = 's2NNDar9HUSM5MaOqHllc98OxRbK5mx5tRw1H7LD/ws=';
-// Using thingproxy as an alternative
-const CORS_PROXY = 'https://thingproxy.freeboard.io/fetch/';
-const API_URL = `${CORS_PROXY}https://public-api.foreflight.com`;
+const API_URL = ''; // URL vazia para usar paths relativos
 const DEFAULT_AIRLINE = 'Universal Weather';
 
 interface ApiResponse {
@@ -25,10 +23,8 @@ export class FlightService {
   private api = axios.create({
     baseURL: API_URL,
     headers: {
-      'ff-api-key': API_KEY,
       Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'Origin': 'https://flight-panel.onrender.com'
+      'Content-Type': 'application/json'
     },
     timeout: 15000, // Aumentado para 15 segundos
   });
@@ -85,17 +81,7 @@ export class FlightService {
 
   async getAllFlights(): Promise<Flight[]> {
     try {
-      const fullUrl = `${API_URL}/public/api/flights`;
-      console.log('Fetching flights from:', fullUrl);
-      
-      // Fazer requisição direta em vez de usar baseURL
-      const response = await axios.get<ApiResponse>(fullUrl, {
-        headers: {
-          'ff-api-key': API_KEY,
-          'Accept': 'application/json'
-        },
-        timeout: 15000
-      });
+      const response = await this.api.get<ApiResponse>('/api/flights');
 
       if (!response.data || !response.data.flights) {
         console.warn('No flights data received from API');
@@ -151,12 +137,10 @@ export class FlightService {
         });
     } catch (error: any) {
       // Melhorar o log de erro para debug
-      console.error('API Error Details:', {
+      console.error('API Error:', {
         message: error.message,
-        url: `${API_URL}/public/api/flights`,
         status: error.response?.status,
-        statusText: error.response?.statusText,
-        headers: error.response?.headers
+        data: error.response?.data
       });
       return this.getMockFlights();
     }

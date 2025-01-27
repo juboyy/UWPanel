@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 
 // Atualizar para a API key do ForeFlight
 const API_KEY = 'your-foreflight-api-key'; // Substitua pela sua chave real do ForeFlight
-const API_URL = 'https://public-api.foreflight.com';
+const API_URL = ''; // URL vazia para usar URL relativa
 const DEFAULT_AIRLINE = 'Universal Weather';
 
 interface ApiResponse {
@@ -83,7 +83,7 @@ export class FlightService {
 
   async getAllFlights(): Promise<Flight[]> {
     try {
-      const response = await this.api.get<ApiResponse>('/public/api/flights'); // Caminho completo da API
+      const response = await this.api.get<ApiResponse>('/api/flights'); // Caminho completo da API
       
       if (!response.data || !response.data.flights) {
         console.warn('No flights data received from API');
@@ -144,8 +144,9 @@ export class FlightService {
           status: error.response?.status,
           data: error.response?.data,
           headers: error.response?.headers,
-          url: `${API_URL}${error.config?.url}`, // URL completa para debug
-          method: error.config?.method
+          url: error.config?.url, // URL completa para debug
+          method: error.config?.method,
+          message: error.message
         });
       }
       return this.getMockFlights();

@@ -27,6 +27,7 @@ export class FlightService {
       'x-api-key': API_KEY,
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
     },
     timeout: 10000, // 10 segundos de timeout
   });
@@ -84,7 +85,7 @@ export class FlightService {
   async getAllFlights(): Promise<Flight[]> {
     try {
       // Tentar com o path completo
-      const response = await this.api.get<ApiResponse>('/flights');
+      const response = await this.api.get<ApiResponse>('/api/flights');
       
       if (!response.data || !response.data.flights) {
         console.warn('No flights data received from API');
@@ -145,7 +146,8 @@ export class FlightService {
           status: error.response?.status,
           data: error.response?.data,
           headers: error.response?.headers,
-          url: error.config?.url
+          url: error.config?.url,
+          method: error.config?.method
         });
       }
       return this.getMockFlights();

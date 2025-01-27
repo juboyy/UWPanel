@@ -3,9 +3,9 @@ import { Flight } from '../types/flightTypes';
 import { DateTime } from 'luxon';
 
 const API_KEY = 's2NNDar9HUSM5MaOqHllc98OxRbK5mx5tRw1H7LD/ws=';
-// Usando o allOrigins como alternativa
-const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
-const API_URL = `${CORS_PROXY}${encodeURIComponent('https://public-api.foreflight.com')}`;
+// Using thingproxy as an alternative
+const CORS_PROXY = 'https://thingproxy.freeboard.io/fetch/';
+const API_URL = `${CORS_PROXY}https://public-api.foreflight.com`;
 const DEFAULT_AIRLINE = 'Universal Weather';
 
 interface ApiResponse {
@@ -28,8 +28,9 @@ export class FlightService {
       'ff-api-key': API_KEY,
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      'Origin': 'https://flight-panel.onrender.com'
     },
-    timeout: 10000, // 10 segundos de timeout
+    timeout: 15000, // Aumentado para 15 segundos
   });
 
   private readonly PANAMA_TIMEZONE = 'America/Panama';
@@ -84,9 +85,18 @@ export class FlightService {
 
   async getAllFlights(): Promise<Flight[]> {
     try {
-      console.log('Fetching flights from:', `${API_URL}/public/api/flights`);
-      const response = await this.api.get<ApiResponse>('/public/api/flights');
+      const fullUrl = `${API_URL}/public/api/flights`;
+      console.log('Fetching flights from:', fullUrl);
       
+      // Fazer requisição direta em vez de usar baseURL
+      const response = await axios.get<ApiResponse>(fullUrl, {
+        headers: {
+          'ff-api-key': API_KEY,
+          'Accept': 'application/json'
+        },
+        timeout: 15000
+      });
+
       if (!response.data || !response.data.flights) {
         console.warn('No flights data received from API');
         return this.getMockFlights();
@@ -141,17 +151,13 @@ export class FlightService {
         });
     } catch (error: any) {
       // Melhorar o log de erro para debug
-      if (axios.isAxiosError(error)) {
-        console.error('API Error:', {
-          status: error.response?.status,
-          data: error.response?.data,
-          headers: error.response?.headers,
-          url: error.config?.url,
-          method: error.config?.method,
-          message: error.message,
-          fullUrl: `${API_URL}${error.config?.url}` // URL completa para debug
-        });
-      }
+      console.error('API Error Details:', {
+        message: error.message,
+        url: `${API_URL}/public/api/flights`,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        headers: error.response?.headers
+      });
       return this.getMockFlights();
     }
   }
